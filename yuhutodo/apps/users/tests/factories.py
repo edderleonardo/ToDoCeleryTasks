@@ -5,7 +5,7 @@ from factory import Faker
 from factory import post_generation
 from factory.django import DjangoModelFactory
 
-from yuhutodo.users.models import User
+from yuhutodo.apps.users.models import User
 
 
 class UserFactory(DjangoModelFactory):

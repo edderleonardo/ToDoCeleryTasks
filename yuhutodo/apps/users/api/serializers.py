@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from yuhutodo.users.models import User
+from yuhutodo.apps.users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer[User]):

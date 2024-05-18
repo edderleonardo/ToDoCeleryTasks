@@ -4,7 +4,7 @@ import django.utils.timezone
 from django.db import migrations
 from django.db import models
 
-import yuhutodo.users.models
+import yuhutodo.apps.users.models
 
 
 class Migration(migrations.Migration):
@@ -106,7 +106,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
             },
             managers=[
-                ("objects", yuhutodo.users.models.UserManager()),
+                ("objects", yuhutodo.apps.users.models.UserManager()),
             ],
         ),
     ]

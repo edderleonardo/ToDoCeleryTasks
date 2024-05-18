@@ -1,7 +1,7 @@
 import pytest
 
-from yuhutodo.users.models import User
-from yuhutodo.users.tests.factories import UserFactory
+from yuhutodo.apps.users.models import User
+from yuhutodo.apps.users.tests.factories import UserFactory
 
 
 @pytest.fixture(autouse=True)

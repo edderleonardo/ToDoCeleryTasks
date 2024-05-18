@@ -85,7 +85,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "yuhutodo.users",
+    "yuhutodo.apps.users",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -189,7 +189,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "yuhutodo.users.context_processors.allauth_settings",
+                "yuhutodo.apps.users.context_processors.allauth_settings",
             ],
         },
     },
@@ -309,13 +309,13 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://docs.allauth.org/en/latest/account/configuration.html
-ACCOUNT_ADAPTER = "yuhutodo.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "yuhutodo.apps.users.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
-ACCOUNT_FORMS = {"signup": "yuhutodo.users.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "yuhutodo.apps.users.forms.UserSignupForm"}
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_ADAPTER = "yuhutodo.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "yuhutodo.apps.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_FORMS = {"signup": "yuhutodo.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {"signup": "yuhutodo.apps.users.forms.UserSocialSignupForm"}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------
