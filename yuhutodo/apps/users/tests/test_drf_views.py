@@ -1,8 +1,8 @@
 import pytest
 from rest_framework.test import APIRequestFactory
 
-from yuhutodo.users.api.views import UserViewSet
-from yuhutodo.users.models import User
+from yuhutodo.apps.users.api.views import UserViewSet
+from yuhutodo.apps.users.models import User
 
 
 class TestUserViewSet:

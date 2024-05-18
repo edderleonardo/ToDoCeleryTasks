@@ -12,12 +12,12 @@ from django.test import RequestFactory
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from yuhutodo.users.forms import UserAdminChangeForm
-from yuhutodo.users.models import User
-from yuhutodo.users.tests.factories import UserFactory
-from yuhutodo.users.views import UserRedirectView
-from yuhutodo.users.views import UserUpdateView
-from yuhutodo.users.views import user_detail_view
+from yuhutodo.apps.users.forms import UserAdminChangeForm
+from yuhutodo.apps.users.models import User
+from yuhutodo.apps.users.tests.factories import UserFactory
+from yuhutodo.apps.users.views import UserRedirectView
+from yuhutodo.apps.users.views import UserUpdateView
+from yuhutodo.apps.users.views import user_detail_view
 
 pytestmark = pytest.mark.django_db
 
