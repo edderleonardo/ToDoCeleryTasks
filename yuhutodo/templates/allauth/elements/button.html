@@ -1,20 +1,28 @@
 {% load allauth %}
 
-{% comment %} djlint:off {% endcomment %}
 <{% if attrs.href %}a href="{{ attrs.href }}"{% else %}button{% endif %}
                       {% if attrs.form %}form="{{ attrs.form }}"{% endif %}
                       {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
                       {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
                       {% if attrs.type %}type="{{ attrs.type }}"{% endif %}
-                      class="btn
-{% if 'success' in attrs.tags %}btn-success
-{% elif 'warning' in attrs.tags %}btn-warning
-{% elif 'secondary' in attrs.tags %}btn-secondary
-{% elif 'danger' in attrs.tags %}btn-danger
-{% elif 'primary' in attrs.tags %}btn-primary
-{% else %}btn-primary
-{% endif %}"
+                      class="
+                      {% if 'success' in attrs.tags %}bg-green-500 hover:bg-green-600 text-white
+                      {% elif 'warning' in attrs.tags %}bg-yellow-500 hover:bg-yellow-600 text-white
+                      {% elif 'secondary' in attrs.tags %}bg-gray-500 hover:bg-gray-600 text-white
+                      {% elif 'danger' in attrs.tags %}bg-red-500 hover:bg-red-600 text-white
+                      {% elif 'primary' in attrs.tags %}bg-blue-500 hover:bg-blue-600 text-white
+                      {% else %}bg-blue-500 hover:bg-blue-600 text-white
+                      {% endif %}
+                      px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2
+                      {% if 'success' in attrs.tags %}focus:ring-green-500
+                      {% elif 'warning' in attrs.tags %}focus:ring-yellow-500
+                      {% elif 'secondary' in attrs.tags %}focus:ring-gray-500
+                      {% elif 'danger' in attrs.tags %}focus:ring-red-500
+                      {% elif 'primary' in attrs.tags %}focus:ring-blue-500
+                      {% else %}focus:ring-blue-500
+                      {% endif %}
+                      "
 >
   {% slot %}
   {% endslot %}
-  </{% if attrs.href %}a{% else %}button{% endif %}>
+</{% if attrs.href %}a{% else %}button{% endif %}>
