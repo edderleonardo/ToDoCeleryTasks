@@ -72,7 +72,7 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
-    "crispy_bootstrap5",
+    "crispy_tailwind",
     "allauth",
     "allauth.account",
     "allauth.mfa",
@@ -199,8 +199,8 @@ TEMPLATES = [
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "tailwind"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 
 # FIXTURES
 # ------------------------------------------------------------------------------
@@ -307,7 +307,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # https://docs.allauth.org/en/latest/account/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_ADAPTER = "yuhutodo.apps.users.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
