@@ -7,9 +7,22 @@ from .serializers import TodoSerializer
 
 class TodoViewSet(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
-    # TODO: Get only the todos of the authenticated user
-    queryset = Todo.objects.all()
     lookup_field = "pk"
 
     def perform_create(self, serializer):
+        """
+        Save user logged in user when creating a new task
+
+        Author:
+            Edder Ramírez
+        """
         serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        """
+        Return tasks for the current authenticated user
+
+        Author:
+            Edder Ramírez
+        """
+        return Todo.objects.filter(user=self.request.user)
