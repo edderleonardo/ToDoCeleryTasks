@@ -51,28 +51,26 @@
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
 
-          <tr class="border-b border-gray-200 hover:bg-gray-100" v-for="todo in todos" :key="todo.id">
-            <td class="py-3 px-6 text-center">
-              <input type="checkbox" :checked="todo.is_completed" @change="toggleCompleted(todo)">
-            </td>
-            <td class="py-3 px-6 text-left">${ todo.id }</td>
-            <td class="py-3 px-6 text-left">${ todo.title }</td>
-            <td class="py-3 px-6 text-left">${ todo.description }</td>
-            <td class="py-3 px-6 text-left">${ todo.due_date }</td>
-            <td class="py-3 px-6 text-left">
-              <span 
-                @click=modalAction(todo)
-                class="text-gray-500 hover:text-gray-700 pointer">
-                Edit
-              </span>
-                |
-              <span 
-                @click=deleteTodo(todo)
-                class="text-red-500 hover:text-red-700 pointer">
-                Delete
-              </span>
-            </td>
-          </tr>
+          <template v-if="todos.length > 0">
+            <tr v-for="todo in todos" :key="todo.id" class="border-b border-gray-200 hover:bg-gray-100">
+              <td class="py-3 px-6 text-center">
+                <input type="checkbox" :checked="todo.is_completed" @change="toggleCompleted(todo)">
+              </td>
+              <td class="py-3 px-6 text-left">${ todo.id }</td>
+              <td class="py-3 px-6 text-left">${ todo.title }</td>
+              <td class="py-3 px-6 text-left">${ todo.description }</td>
+              <td class="py-3 px-6 text-left">${ todo.due_date }</td>
+              <td class="py-3 px-6 text-left">
+                <span @click="modalAction(todo)" class="text-gray-500 hover:text-gray-700 pointer">Edit</span> |
+                <span @click="deleteTodo(todo)" class="text-red-500 hover:text-red-700 pointer">Delete</span>
+              </td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr>
+              <td colspan="6" class="py-3 px-6 text-center">No hay tareas disponibles.</td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>
