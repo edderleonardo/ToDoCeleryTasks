@@ -16,6 +16,8 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("yuhutodo.apps.users.urls", namespace="users")),
+    # Todo app
+    path("todo/", include("yuhutodo.apps.todo.urls", namespace="todo")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     # ...
