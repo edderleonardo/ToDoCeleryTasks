@@ -1,4 +1,142 @@
-{% extends "base.html" %}
-{% block content %}
-    <h1>ToDo</h1>
+{% extends "base.html" %} {% load static %} {% block content %}
+<div id="app">
+  <div class="container mx-auto mt-10">
+    <div class="flex justify-between items-center">
+      <div class="p-4">
+        <h1 class="text-3xl text-gray-800 font-bold">My To Do List</h1>
+      </div>
+      <div class="p-4">
+        <span class="px-3 py-2 bg-blue-500 text-white rounded-md pointer"
+          onClick=modalAction()
+          >Add New</span|
+        >
+      </div>
+    </div>
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table class="min-w-full bg-white">
+        <thead
+          class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal"
+        >
+          <tr>
+            <th class="py-3 px-6 text-center">Completed</th>
+            <th class="py-3 px-6 text-left">ID</th>
+            <th class="py-3 px-6 text-left">Title</th>
+            <th class="py-3 px-6 text-left">Description</th>
+            <th class="py-3 px-6 text-left">Due Date</th>
+            <th class="py-3 px-6 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+
+          <tr class="border-b border-gray-200 hover:bg-gray-100" v-for="todo in todos" :key="todo.id">
+            <td class="py-3 px-6 text-center">
+              <input type="checkbox" :checked="todo.is_completed" />
+            </td>
+            <td class="py-3 px-6 text-left">${ todo.id }</td>
+            <td class="py-3 px-6 text-left">${ todo.title }</td>
+            <td class="py-3 px-6 text-left">${ todo.description }</td>
+            <td class="py-3 px-6 text-left">${ todo.due_date }</td>
+            <td class="py-3 px-6 text-left">
+              <span class="text-gray-500 hover:text-gray-700">
+                Edit
+              </span>
+                |
+              <span href="" class="text-red-500 hover:text-red-700">
+                Delete
+              </span>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- modal -->
+    <div class="fixed z-10 inset-0 overflow-y-auto" id="modal" v-if="modal">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div>
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <!-- Aquí agregamos la "X" de cerrar -->
+                <button 
+                  onClick=modalAction()
+                  class="absolute top-0 right-0 mt-4 mr-4 text-gray-500 hover:text-gray-700">
+                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                  Add New To Do
+                </h3>
+                <div class="mt-2">
+                  <form action="" method="post">
+                    <div class="mb-4">
+                      <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                      <input type="text" id="title" name="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="title">
+                    </div>
+                    <div class="mb-4">
+                      <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                      <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="description"></textarea>
+                    </div>
+                    <div class="mb-4">
+                      <label for="due_date" class="block text-gray-700 text-sm font-bold mb-2">Due Date</label>
+                      <input type="date" id="due_date" name="due_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="due_date">
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <button 
+                        onClick=modalAction()
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button">
+                        Cancel
+                      </button>
+                      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Save
+                      </button>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+  {% endblock %}
+  {% block inline_javascript %}
+  <script>
+    const { createApp, ref, onMounted } = Vue;
+    createApp({
+      delimiters: ["${", "}"], // Configuración de delimitadores personalizados para no chocar con Django
+      setup() {
+        const todos = ref([]);
+        const modal = ref(false);
+        const title = ref("");
+        const description = ref("");
+        const due_date = ref("");
+
+        onMounted(async () => {
+          const response = await axios.get("http://localhost:8000/api/todos/");
+          todos.value = response.data;
+        });
+
+        modalAction = () => {
+          console.log("modalAction", modal.value);
+          modal.value = !modal.value;
+          console.log("modalAction", modal.value);
+        };
+
+
+
+        return {
+          todos,
+          modal,
+          modalAction,
+        };
+      },
+    }).mount("#app");
+  </script>
 {% endblock %}

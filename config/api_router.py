@@ -8,7 +8,7 @@ from yuhutodo.apps.users.api.views import UserViewSet
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()
 
 router.register("users", UserViewSet)
-router.register("todos", TodoViewSet)
+router.register("tasks", TodoViewSet)
 
 
 app_name = "api"

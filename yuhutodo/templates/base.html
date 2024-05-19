@@ -18,6 +18,8 @@
     {% block css %}
     <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"></script>
     <link href="{% static 'css/project.css' %}" rel="stylesheet" />
     <!-- Your stuff: Third-party CSS libraries go here -->
     <!-- This file stores project-specific CSS -->
@@ -29,6 +31,9 @@
         position: absolute;
         right: 0;
         top: 20px;
+      }
+      .pointer {
+        cursor: pointer;
       }
     </style>
     <!-- Le javascript
