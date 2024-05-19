@@ -66,9 +66,12 @@
                 Edit
               </span>
                 |
-              <span href="" class="text-red-500 hover:text-red-700">
+              <span 
+                @click=deleteTodo(todo)
+                class="text-red-500 hover:text-red-700 pointer">
                 Delete
               </span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -250,7 +253,20 @@
             console.error("Error toggling todo:", error);
           }
         };
-
+        
+        deleteTodo = async (todo) => {
+          const csrftoken = getCookie('csrftoken');
+          try {
+            await axios.delete(`${url}/tasks/${todo.id}/`, {
+              headers: {
+                'X-CSRFToken': csrftoken
+              }
+            });
+            todos.value = todos.value.filter((t) => t.id !== todo.id);
+          } catch (error) {
+            console.error("Error deleting todo:", error);
+          }
+        };
 
         return {
           url,
@@ -264,6 +280,7 @@
           addOrUpdateTodo,
           currentTodo,
           toggleCompleted,
+          deleteTodo,
         };
       },
     }).mount("#app");
