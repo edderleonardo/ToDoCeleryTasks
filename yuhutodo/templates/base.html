@@ -18,11 +18,19 @@
     {% block css %}
     <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
     <!-- Your stuff: Third-party CSS libraries go here -->
     <!-- This file stores project-specific CSS -->
-    <link href="{% static 'css/project.css' %}" rel="stylesheet" />
     {% endblock css %}
+    <style>
+      .message-style {
+        margin-right: 20px;
+        width: 400px;
+        position: absolute;
+        right: 0;
+        top: 20px;
+      }
+    </style>
     <!-- Le javascript
     ================================================== -->
     {# Placed at the top of the document so pages load faster with defer #}
@@ -47,6 +55,7 @@
             <ul class="hidden md:flex space-x-4" id="nav-content">
               <li><a class="text-gray-700 hover:text-gray-900" href="{% url 'home' %}">Home</a></li>
               {% if request.user.is_authenticated %}
+              <li><a class="text-gray-700 hover:text-gray-900" href="{% url 'todo:index' %}">{% translate "ToDo" %}</a></li>
               <li><a class="text-gray-700 hover:text-gray-900" href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a></li>
               <li><a class="text-gray-700 hover:text-gray-900" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a></li>
               {% else %}
@@ -63,7 +72,7 @@
     <div>
       {% if messages %}
       {% for message in messages %}
-      <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %} p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800">
+      <div id="message-{{ forloop.counter }}" class="message-style alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %} p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800">
         {{ message }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
@@ -86,6 +95,18 @@
       document.getElementById('nav-toggle').onclick = function() {
         document.getElementById('nav-content').classList.toggle('hidden');
       }
+      document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.alert');
+        messages.forEach(message => {
+          setTimeout(() => {
+            message.style.transition = "opacity 0.5s ease-out";
+            message.style.opacity = "0";
+            setTimeout(() => {
+              message.remove();
+            }, 500); // Wait for the fade-out transition to complete
+          }, 5000); // 5 seconds before starting to fade out
+        });
+      });
     </script>
     {% endblock inline_javascript %}
   </body>

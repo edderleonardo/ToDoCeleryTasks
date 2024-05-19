@@ -86,7 +86,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "yuhutodo.apps.users",
-    # Your stuff: custom apps go here
+    "yuhutodo.apps.todo",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -316,7 +316,7 @@ ACCOUNT_FORMS = {"signup": "yuhutodo.apps.users.forms.UserSignupForm"}
 SOCIALACCOUNT_ADAPTER = "yuhutodo.apps.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "yuhutodo.apps.users.forms.UserSocialSignupForm"}
-
+ACCOUNT_LOGOUT_ON_GET = True
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
@@ -338,7 +338,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "yuhuToDo API",
     "DESCRIPTION": "Documentation of API endpoints of yuhuToDo",
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
     "SCHEMA_PATH_PREFIX": "/api/",
 }
 # Your stuff...
