@@ -7,9 +7,9 @@ from .serializers import TodoSerializer
 
 class TodoViewSet(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
+    # TODO: Get only the todos of the authenticated user
     queryset = Todo.objects.all()
     lookup_field = "pk"
-    http_method_names = ['get', 'post', 'put', 'delete']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

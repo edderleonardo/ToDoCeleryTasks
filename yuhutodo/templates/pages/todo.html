@@ -41,7 +41,7 @@
           class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal"
         >
           <tr>
-            <th class="py-3 px-6 text-center">Completed</th>
+            <th class="py-3 px-6 text-center">Mark as Completed</th>
             <th class="py-3 px-6 text-left">ID</th>
             <th class="py-3 px-6 text-left">Title</th>
             <th class="py-3 px-6 text-left">Description</th>
@@ -53,14 +53,16 @@
 
           <tr class="border-b border-gray-200 hover:bg-gray-100" v-for="todo in todos" :key="todo.id">
             <td class="py-3 px-6 text-center">
-              <input type="checkbox" :checked="todo.is_completed" />
+              <input type="checkbox" :checked="todo.is_completed" @change="toggleCompleted(todo)">
             </td>
             <td class="py-3 px-6 text-left">${ todo.id }</td>
             <td class="py-3 px-6 text-left">${ todo.title }</td>
             <td class="py-3 px-6 text-left">${ todo.description }</td>
             <td class="py-3 px-6 text-left">${ todo.due_date }</td>
             <td class="py-3 px-6 text-left">
-              <span class="text-gray-500 hover:text-gray-700">
+              <span 
+                @click=modalAction(todo)
+                class="text-gray-500 hover:text-gray-700 pointer">
                 Edit
               </span>
                 |
@@ -92,7 +94,7 @@
                 </button>
 
                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                  Add New To Do
+                  ${ editMode ? 'Edit To Do' : 'Add New To Do' }
                 </h3>
                 <div class="mt-2">
                   <form action="" method="post">
@@ -105,7 +107,7 @@
                         id="title"
                         name="title"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        v-model="title">
+                        v-model="currentTodo.title">
                     </div>
                     <div class="mb-4">
                       <label 
@@ -115,7 +117,7 @@
                         id="description"
                         name="description"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        v-model="description"></textarea>
+                        v-model="currentTodo.description"></textarea>
                     </div>
                     <div class="mb-4">
                       <label
@@ -126,7 +128,7 @@
                         id="due_date"
                         name="due_date"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        v-model="due_date">
+                        v-model="currentTodo.due_date">
                     </div>
                     <div class="flex items-center justify-between">
                       <button 
@@ -136,10 +138,10 @@
                         Cancel
                       </button>
                       <button
-                        onClick=addTodo()
+                        onClick=addOrUpdateTodo()
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="button">
-                        Save
+                        ${ editMode ? 'Edit To Do' : 'Add New To Do' }
                       </button>
                     </div>
               </div>
@@ -164,40 +166,88 @@
         const description = ref("");
         const due_date = ref("");
         const url = "http://localhost:8000/api"
+        const currentTodo = ref({
+          id: null,
+          title: "",
+          description: "",
+          due_date: "",
+        });
+        const editMode = ref(false);
+
+        const formatDate = (dateString) => {
+          const date = new Date(dateString);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        };
 
         onMounted(async () => {
           const response = await axios.get(`${url}/tasks/`);
-          todos.value = response.data;
+          todos.value = response.data.map(todo => ({
+            ...todo,
+            due_date: formatDate(todo.due_date),
+          }));
         });
 
-        modalAction = () => {
+        modalAction = (todo = null) => {
+          if (todo) {
+            editMode.value = true;
+            currentTodo.value = { ...todo, due_date: formatDate(todo.due_date), };
+          } else {
+            editMode.value = false;
+            currentTodo.value = {
+              id: null,
+              title: "",
+              description: "",
+              due_date: "",
+            };
+          }
           modal.value = !modal.value;
-          console.log("modalAction", modal.value);
         };
 
-        addTodo = async () => {
+        addOrUpdateTodo = async () => {
           const csrftoken = getCookie('csrftoken');
-          console.log("🚀 ~ addTodo= ~ csrftoken:", csrftoken)
-          
-          data = {
-            title: title.value,
-            description: description.value,
-            due_date: due_date.value,
-          };
-
           try {
-            const response = await axios.post(`${url}/tasks/`, data, {
+            if (editMode.value) {
+              // Edit existing
+              const response = await axios.put(`${url}/tasks/${currentTodo.value.id}/`, currentTodo.value, {
+                headers: {
+                  'X-CSRFToken': csrftoken
+                }
+              });
+              const index = todos.value.findIndex((todo) => todo.id === response.data.id);
+              todos.value[index] = response.data;
+            } else {
+              // Add new
+              const response = await axios.post(`${url}/tasks/`, currentTodo.value, {
+                headers: {
+                  'X-CSRFToken': csrftoken
+                }
+              });
+              todos.value.push(response.data);
+            }
+            modalAction();
+          } catch (error) {
+            console.error("Error adding or updating todo:", error);
+          }
+        };
+        
+        toggleCompleted = async (todo) => {
+          const csrftoken = getCookie('csrftoken');
+          try {
+            const response = await axios.put(`${url}/tasks/${todo.id}/`, {
+              ...todo,
+              is_completed: !todo.is_completed,
+            }, {
               headers: {
                 'X-CSRFToken': csrftoken
               }
             });
-            todos.value.push(response.data);
-            modalAction();
-            title.value = "";
-            description.value = "";
-            due_date.value = "";
+            const index = todos.value.findIndex((t) => t.id === response.data.id);
+            todos.value[index] = response.data;
           } catch (error) {
-            console.error("Error adding todo:", error);
+            console.error("Error toggling todo:", error);
           }
         };
 
@@ -206,11 +256,14 @@
           url,
           todos,
           modal,
+          editMode,
           title,
           description,
           due_date,
           modalAction,
-          addTodo
+          addOrUpdateTodo,
+          currentTodo,
+          toggleCompleted,
         };
       },
     }).mount("#app");
