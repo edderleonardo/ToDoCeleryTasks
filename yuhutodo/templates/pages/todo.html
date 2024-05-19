@@ -152,6 +152,13 @@
                         ${ editMode ? 'Edit To Do' : 'Add New To Do' }
                       </button>
                     </div>
+                    <div v-if="errors.length > 0" class="mt-4">
+                      <ul>
+                        <li v-for="(error, index) in errors" :key="index" class="text-red-500 text-sm">
+                          ${ error } 
+                        </li>
+                      </ul>
+                    </div>
               </div>
             </div>
           </div>
@@ -182,6 +189,7 @@
         });
         const editMode = ref(false);
         const isLoading = ref(false);
+        const errors = ref([]);
 
         const formatDate = (dateString) => {
           const date = new Date(dateString);
@@ -217,6 +225,8 @@
 
         addOrUpdateTodo = async () => {
           const csrftoken = getCookie('csrftoken');
+          errors.value = [];
+
           try {
             isLoading.value = true;
             if (editMode.value) {
@@ -241,7 +251,11 @@
             modalAction();
           } catch (error) {
             isLoading.value = false;
-            console.error("Error adding or updating todo:", error);
+            if (error.response && error.response.data) {
+              errors.value = Object.values(error.response.data).flat();
+            } else {
+              console.error("Error adding or updating todo: ", error);
+            }
           }
         };
         
@@ -291,6 +305,7 @@
           toggleCompleted,
           deleteTodo,
           isLoading,
+          errors,
         };
       },
     }).mount("#app");
