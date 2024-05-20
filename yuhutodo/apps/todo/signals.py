@@ -8,4 +8,5 @@ def notify_action(sender, instance, created, **kwargs):
     action = "created" if created else "updated"
     title = instance.title
     description = instance.description
-    send_email_notification.delay(action=action, title=title, description=description)
+    email = instance.user.email
+    send_email_notification.delay(action=action, title=title, description=description, email=email)

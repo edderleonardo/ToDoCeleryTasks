@@ -6,7 +6,7 @@ from yuhutodo.apps.messaging.email.helpers import send_email
 
 
 @shared_task
-def send_email_notification(action: str, title: str, description: str):
+def send_email_notification(action: str, title: str, description: str, email: str):
     """
     Send email when a new task is created
     """
@@ -14,7 +14,7 @@ def send_email_notification(action: str, title: str, description: str):
 
     send_email(
         subject=title_email,
-        to_email=["edderleonardo@gmail.com"],
+        to_email=[email],
         template="emails/notify_tasks/notify.html",
         ctx={
             "title": title_email,
