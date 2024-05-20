@@ -7,70 +7,32 @@ ToDo for Yuhu.mx
 
 License: MIT
 
+### Version 1.0.0
+
 ## Settings
 
 Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
 
+## Requirements
+
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Composer](https://docs.docker.com/compose/install/)
+
+
 ## Basic Commands
 
-### Setting Up Your Users
+### Building then  images (only the first time or when you make changes to the Dockerfile)
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+      $ docker compose -f docker-compose.local.yml up --build
 
-- To create a **superuser account**, use this command:
+Visit `http://127.0.0.0:8000` in your browser. Enjoy!
 
-      $ python manage.py createsuperuser
+### Create superuser
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+Run
 
-### Type checks
+    $ docker compose -f docker-compose.local.yml run --rm django python manage.py createsuperuser
 
-Running type checks with mypy:
-
-    $ mypy yuhutodo
-
-### Test coverage
-
-To run the tests, check your test coverage, and generate an HTML coverage report:
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
-
-### Celery
-
-This app comes with Celery.
-
-To run a celery worker:
-
-```bash
-cd yuhutodo
-celery -A config.celery_app worker -l info
-```
-
-Please note: For Celery's import magic to work, it is important _where_ the celery commands are run. If you are in the same folder with _manage.py_, you should be right.
-
-To run [periodic tasks](https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html), you'll need to start the celery beat scheduler service. You can start it as a standalone process:
-
-```bash
-cd yuhutodo
-celery -A config.celery_app beat
-```
-
-or you can embed the beat service inside a worker with the `-B` option (not recommended for production use):
-
-```bash
-cd yuhutodo
-celery -A config.celery_app worker -B -l info
-```
 
 ### Email Server
 
@@ -81,10 +43,15 @@ Please check [cookiecutter-django Docker documentation](http://cookiecutter-djan
 
 With Mailpit running, to view messages that are sent by your application, open your browser and go to `http://127.0.0.1:8025`
 
-## Deployment
+## Flower
 
-The following details how to deploy this application.
+You can access the flower admin interface at `http://127.0.0.1:5555` for monitoring and managing your Celery cluster.
 
-### Docker
+## API Documentation
 
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+The API documentation is available at `/api/docs/` (for DRF) and `/api/schema/swagger-ui/` (for GraphQL).
+
+
+### TODO
+
+- [ ] Test with `pytest`
