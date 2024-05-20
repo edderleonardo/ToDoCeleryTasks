@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 from yuhutodo.apps.todo.models import Todo
 
@@ -8,6 +9,8 @@ from .serializers import TodoSerializer
 class TodoViewSet(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
     lookup_field = "pk"
+    pagination_class = PageNumberPagination
+
 
     def perform_create(self, serializer):
         """

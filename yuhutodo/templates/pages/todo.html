@@ -73,6 +73,10 @@
           </template>
         </tbody>
       </table>
+      <div class="flex justify-between items-center p-4 bg-white">
+        <button @click="fetchTodos(previous)" :disabled="!previous" class="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50">Previous</button>
+        <button @click="fetchTodos(next)" :disabled="!next" class="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50">Next</button>
+      </div>
     </div>
     <!-- modal -->
     <div class="fixed z-10 inset-0 overflow-y-auto" id="modal" v-if="modal">
@@ -174,6 +178,9 @@
           due_date: "",
         });
         const editMode = ref(false);
+        const next = ref(null);
+        const previous = ref(null);
+  
 
         const formatDate = (dateString) => {
           const date = new Date(dateString);
@@ -183,12 +190,18 @@
           return `${year}-${month}-${day}`;
         };
 
-        onMounted(async () => {
-          const response = await axios.get(`${url}/tasks/`);
-          todos.value = response.data.map(todo => ({
+        const fetchTodos = async (pageUrl = `${url}/tasks/`) => {
+          const response = await axios.get(pageUrl);
+          todos.value = response.data.results.map(todo => ({
             ...todo,
             due_date: formatDate(todo.due_date),
           }));
+          next.value = response.data.next;
+          previous.value = response.data.previous;
+        };
+
+        onMounted(async () => {
+          await fetchTodos();
         });
 
         modalAction = (todo = null) => {
@@ -279,6 +292,9 @@
           currentTodo,
           toggleCompleted,
           deleteTodo,
+          fetchTodos,
+          next,
+          previous,
         };
       },
     }).mount("#app");
