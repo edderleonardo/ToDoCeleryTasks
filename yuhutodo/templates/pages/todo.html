@@ -220,6 +220,7 @@
         });
 
         modalAction = (todo = null) => {
+          errors.value = [];
           if (todo) {
             editMode.value = true;
             currentTodo.value = { ...todo, due_date: formatDate(todo.due_date), };
